@@ -1,0 +1,6 @@
+# List of LaTeX packages and commands they're needed for.
+
+graphicx : \includegraphics
+amssymb : \Cap, \Cup, \mathbb
+commath : \abs
+tikz : tikz

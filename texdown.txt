@@ -14,3 +14,6 @@ Todo:
   \[ and \], unless matched with '.
 - convert some basic LaTeX files into this new form and see if it actually
   makes a difference.
+
+This tool should also write the header garbage I need. It could even write
+\usepackage for me based on what's in the file.
