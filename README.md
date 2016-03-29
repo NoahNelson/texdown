@@ -33,6 +33,9 @@ a .td input file and outputs a .tex file, processing with the following rules:
 - Imports and other metadata are specified in a header .tex file, which will
   commonly be shared between a few .tex files
 
+To convert example.td into example.tex using header.tex's declarations,
+`python texstream.py example.td header.tex example.tex`.
+
 ## Planned features
 
 A couple other things I'd like to implement:
