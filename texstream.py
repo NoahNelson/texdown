@@ -1,7 +1,5 @@
 import sys
 
-innerlines = { 1: "\n", 2: "\\begin{document}\n", 3: "\\maketitle\n", 4: "\n" }
-
 class Texstream:
 
     def __init__(self, inf, headf):
@@ -13,6 +11,20 @@ class Texstream:
         self.lineno = 0
         self.inFile = open(inf, 'r')
         self.headFile = open(headf, 'r')
+        self.title = ""
+        self.author = ""
+        self.pnumber = None # Problem number, if available
+        # get title, author, problem set number if available.
+        for line in self.inFile:
+            if line.startswith("# "):
+                self.title = line[2:-1]
+            elif line.startswith("## "):
+                self.author = line[3:-1]
+            elif line.startswith("### "):
+                self.pnumber = int(line[4:-1])
+        self.inFile.seek(0, 0) # return to beginning of input file
+        self.usedtitle = False
+        self.usedauthor = False
 
     def __del__(self):
         self.inFile.close()
@@ -25,10 +37,23 @@ class Texstream:
         if self.inHeader:
             # attempt to read a line from the header file
             line = next(self.headFile, None)
-            if line is None or "%" in line:
+            if line is None:
                 self.inHeader = False
                 return "\n" # New line between header and content
             else:
+                # Check if it's time to insert a name or title
+                if line.startswith("\\newcommand{\\name}") \
+                        and self.author != "":
+                    self.usedauthor = True
+                    return "\\newcommand{\\name} {%s}\n" % self.author
+                elif line.startswith("\\newcommand{\\settitle}") \
+                        and self.title != "":
+                    self.usedtitle = True
+                    return "\\newcommand{\\settitle} {%s}\n" % self.title
+                elif line.startswith("\\newcommand{\\pnumb}") \
+                        and self.pnumber is not None:
+                    return "\\newcommand{\\pnumb} {%d}\n" % self.pnumber
+                # otherwise, pass along the line the way it was.
                 return line
         elif self.beginning > 0 and self.beginning < 5:
             line = innerlines[self.beginning]
@@ -42,14 +67,24 @@ class Texstream:
                 else:
                     self.ended = True
                     return "\\end{document}\n"
-            if self.lineno == 0 and line[0] == '#':
-                # Pass along the title
-                self.lineno += 1
-                return "\\title{%s}\n" % line[2:-1]
-            elif self.lineno == 1 and line[0:2] == '##':
-                self.lineno += 1
-                self.beginning += 1
-                return "\\author{%s}\n" % line[3:-1]
+            if line.startswith("# "):
+                if not self.usedtitle:
+                    # Pass along the title
+                    self.lineno += 1
+                    return "\\title{%s}\n" % line[2:-1]
+                else:
+                    return "\n"
+            elif line.startswith("## "):
+                if not self.usedauthor:
+                    # Pass along the author
+                    self.lineno += 1
+                    self.beginning += 1
+                    return "\\author{%s}\n" % line[3:-1]
+                else:
+                    return "\n"
+            elif line.startswith("#"):
+                # Can't pass any hashtag meta-lines
+                return "\n"
             elif line == '`\n' and not self.inBlockMath: # begin block math
                 self.inBlockMath = True
                 return '\\[\n'

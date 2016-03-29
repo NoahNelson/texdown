@@ -40,5 +40,5 @@ To convert example.td into example.tex using header.tex's declarations,
 
 A couple other things I'd like to implement:
 
-- Unicode characters converted into things like \in or \geq
+- Unicode characters like ≥ and ∈ converted into corresponding commands
 - Packages imported based on whether or not their commands are used
