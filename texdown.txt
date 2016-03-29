@@ -1,0 +1,16 @@
+TeXdown - a markdown language for math.
+
+Things that bug me about LaTeX/wishlist:
+
+- phonetic name
+- less intrusive math-mode character
+    - can be the same inline and block mode with clever processing
+- unicode support
+- easier variable definitions
+
+Todo:
+
+- substitute inline backticks for $ and backticks beginning a math block with
+  \[ and \], unless matched with '.
+- convert some basic LaTeX files into this new form and see if it actually
+  makes a difference.
