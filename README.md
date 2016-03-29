@@ -14,8 +14,13 @@ formulas. See this example, from a graph theory course I took recently:
 \]
 ```
 
-This produces much simpler output, but it's quite difficult to parse what the
-code is supposed to do. The end goal of this project would look simpler, but
+This produces nice output:
+
+![alt tag](https://raw.githubusercontent.com/NoahNelson/texdown/master/sumimage.png)
+
+But it's quite difficult to parse what the
+code does without looking at the result.
+The end goal of this project is simpler LaTeX code, but
 so far only a few minor changes have been implemented.
 
 ## Usage
